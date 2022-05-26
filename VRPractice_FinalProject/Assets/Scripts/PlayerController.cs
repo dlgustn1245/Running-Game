@@ -102,6 +102,7 @@ public class PlayerController : MonoBehaviour
             if (hitObj.gameObject.CompareTag("Obstacle"))
             {
                 Destroy(hitObj.gameObject);
+                GameManager.Instance.PlayerScored(1);
             }
         }
     }
