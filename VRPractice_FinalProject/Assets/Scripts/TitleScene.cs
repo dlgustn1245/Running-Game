@@ -5,7 +5,7 @@ public class TitleScene : MonoBehaviour
 {
     public void StartGameButton()
     {
-        SceneManager.LoadScene("기말_2017136099_이현수");
+        SceneManager.LoadScene("MainStage");
     }
 
     public void QuitGameButton()

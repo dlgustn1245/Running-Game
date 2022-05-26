@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 10.0f;
+    public int moveSpeed;
+    public int jumpPower;
     public Camera theCamera;
 
     Rigidbody rb;
     Animator anim;
+    bool isJumping;
 
     void Awake()
     {
@@ -18,19 +20,26 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-
+        isJumping = false;
     }
 
     void Update()
     {
+        anim.SetBool("GameStart", GameManager.Instance.gameStart);
+
         if (Input.GetMouseButtonDown(0))
         {
             DestroyObstacle();
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            anim.SetTrigger("isJump");
+        }
+
         PlayerRotate();
-        SetAnimValue();
         PlayerFallDown();
+        PlayerJump();
     }
 
     void PlayerFallDown()
@@ -48,7 +57,7 @@ public class PlayerController : MonoBehaviour
 
     void PlayerMove()
     {
-        if (!GameManager.Instance.gameStart || GameManager.Instance.playerDead || GameManager.Instance.gamePaused) return;
+        if (!GameManager.Instance.gameStart || GameManager.Instance.playerDead) return;
 
         Vector3 moveVector = this.transform.forward * moveSpeed * Time.deltaTime;
         rb.MovePosition(rb.position + moveVector);
@@ -56,7 +65,7 @@ public class PlayerController : MonoBehaviour
 
     void PlayerRotate()
     {
-        if (!GameManager.Instance.gameStart || GameManager.Instance.playerDead || GameManager.Instance.gamePaused) return;
+        if (!GameManager.Instance.gameStart || GameManager.Instance.playerDead) return;
 
         if (Input.GetKeyDown(KeyCode.A))
         {
@@ -68,9 +77,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void SetAnimValue()
+    void PlayerJump()
     {
-        anim.SetBool("GameStart", GameManager.Instance.gameStart);
+        if (!GameManager.Instance.gameStart || GameManager.Instance.playerDead) return;
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (!isJumping)
+            {
+                isJumping = true;
+                rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+            }
+            else return;
+        }
     }
 
     void DestroyObstacle()
@@ -85,6 +103,14 @@ public class PlayerController : MonoBehaviour
             {
                 Destroy(hitObj.gameObject);
             }
+        }
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            isJumping = false;
         }
     }
 }

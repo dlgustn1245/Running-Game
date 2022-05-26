@@ -35,7 +35,7 @@ public class PauseMenu : MonoBehaviour
     {
         GameManager.Instance.gamePaused = false;
         pauseMenu.SetActive(false);
-        SceneManager.LoadScene("TitleScene");
+        SceneManager.LoadScene("기말_2017136099_이현수");
     }
 
     IEnumerator CountDown()
