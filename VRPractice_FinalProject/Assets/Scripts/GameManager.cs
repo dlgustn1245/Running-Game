@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
     public Text readyText;
     public Text scoreText;
 
+    /// <summary>
+    /// singleton pattern
+    /// </summary>
     static GameManager instance = null;
     public static GameManager Instance
     {
@@ -40,7 +43,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-       Time.timeScale = gamePaused ? 0.0f : 1.0f;
+        Time.timeScale = gamePaused ? 0.0f : 1.0f;
     }
 
     public void PlayerScored(int amount)
@@ -53,14 +56,18 @@ public class GameManager : MonoBehaviour
         scoreText.text = "Score : " + gameScore.ToString();
     }
 
-    public void PlayerDead(){
+    public void PlayerDead()
+    {
         playerDead = true;
+        SoundManager.Instace.StopGameBGM();
+        SoundManager.Instace.PlayGameSFX("gameOver");
     }
 
     IEnumerator ShowReadyText()
     {
         int cnt = 0;
         gameStart = false;
+        SoundManager.Instace.PlayGameSFX("countDown", 0.7f);
         while (cnt < 3)
         {
             readyText.gameObject.SetActive(true);
@@ -71,5 +78,7 @@ public class GameManager : MonoBehaviour
             ++cnt;
         }
         gameStart = true;
+        yield return new WaitForSeconds(0.35f);
+        SoundManager.Instace.PlayGameBGM(0.7f);
     }
 }

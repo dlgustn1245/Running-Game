@@ -16,7 +16,6 @@ public class GameOverMenu : MonoBehaviour
 
     void GameOver(){
         GameManager.Instance.gamePaused = true;
-        GameManager.Instance.playerDead = true;
         gameOverMenu.SetActive(true);
         scoreText.text = "score : " + GameManager.gameScore.ToString();
     }

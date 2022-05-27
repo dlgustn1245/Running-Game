@@ -6,16 +6,20 @@ public class PlayerController : MonoBehaviour
 {
     public int moveSpeed;
     public int jumpPower;
+    public int canDestroyDistance;
+    public AudioClip running;
     public Camera theCamera;
 
     Rigidbody rb;
     Animator anim;
+    AudioSource audioSource;
     bool isJumping;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Start()
@@ -40,13 +44,32 @@ public class PlayerController : MonoBehaviour
         PlayerRotate();
         PlayerFallDown();
         PlayerJump();
+        PlayerFootStep();
+    }
+
+    void PlayerFootStep()
+    {
+        if (!GameManager.Instance.gameStart || GameManager.Instance.playerDead) return;
+
+        if (!isJumping)
+        {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.clip = running;
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            audioSource.Stop();
+        }
     }
 
     void PlayerFallDown()
     {
-        if (this.transform.position.y <= -3.0f)
+        if (this.transform.position.y < -3.0f && !GameManager.Instance.playerDead)
         {
-            GameManager.Instance.playerDead = true;
+            GameManager.Instance.PlayerDead();
         }
     }
 
@@ -59,8 +82,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!GameManager.Instance.gameStart || GameManager.Instance.playerDead) return;
 
-        Vector3 moveVector = this.transform.forward * moveSpeed * Time.deltaTime;
-        rb.MovePosition(rb.position + moveVector);
+        rb.MovePosition(rb.position + this.transform.forward * moveSpeed * Time.deltaTime);
     }
 
     void PlayerRotate()
@@ -96,7 +118,7 @@ public class PlayerController : MonoBehaviour
         if (!GameManager.Instance.gameStart) return;
 
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, int.MaxValue))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, canDestroyDistance))
         {
             Transform hitObj = hitInfo.collider.transform;
             if (hitObj.gameObject.CompareTag("Obstacle"))

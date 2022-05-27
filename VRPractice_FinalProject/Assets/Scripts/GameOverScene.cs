@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameOverScene : MonoBehaviour
 {
@@ -65,5 +66,9 @@ public class GameOverScene : MonoBehaviour
             newRecord.gameObject.SetActive(false);
             yield return new WaitForSeconds(0.5f);
         }
+    }
+
+    public void ToTitleButton(){
+        SceneManager.LoadScene("기말_2017136099_이현수");
     }
 }
