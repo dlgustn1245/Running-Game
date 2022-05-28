@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public int moveSpeed;
-    public int jumpPower;
     public int canDestroyDistance;
     public AudioClip running;
     public Camera theCamera;
@@ -13,7 +12,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody rb;
     Animator anim;
     AudioSource audioSource;
-    bool isJumping;
+    int width;
 
     void Awake()
     {
@@ -24,34 +23,43 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        isJumping = false;
+        width = Screen.width / 2;
     }
 
     void Update()
     {
         anim.SetBool("GameStart", GameManager.Instance.gameStart);
+        if (GameManager.Instance.playerDead) anim.SetTrigger("PlayerDead");
 
         if (Input.GetMouseButtonDown(0))
         {
             DestroyObstacle();
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            anim.SetTrigger("isJump");
-        }
-
         PlayerRotate();
         PlayerFallDown();
-        PlayerJump();
         PlayerFootStep();
+
+        if (Input.mousePosition.x > width)
+        {
+            PlayerMoveHorizontal();
+        }
+        else if (Input.mousePosition.x < width)
+        {
+            PlayerMoveHorizontal(-1);
+        }
+    }
+
+    void PlayerMoveHorizontal(int moveright = 1)
+    {
+        if (!GameManager.Instance.gameStart || GameManager.Instance.playerDead) return;
+
+        rb.MovePosition(rb.position + this.transform.right * moveSpeed * 0.5f * moveright * Time.deltaTime);
     }
 
     void PlayerFootStep()
     {
-        if (!GameManager.Instance.gameStart || GameManager.Instance.playerDead) return;
-
-        if (!isJumping)
+        if (!GameManager.Instance.gamePaused && GameManager.Instance.gameStart && !GameManager.Instance.playerDead)
         {
             if (!audioSource.isPlaying)
             {
@@ -75,10 +83,10 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        PlayerMove();
+        PlayerMoveForward();
     }
 
-    void PlayerMove()
+    void PlayerMoveForward()
     {
         if (!GameManager.Instance.gameStart || GameManager.Instance.playerDead) return;
 
@@ -99,20 +107,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void PlayerJump()
-    {
-        if (!GameManager.Instance.gameStart || GameManager.Instance.playerDead) return;
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (!isJumping)
-            {
-                isJumping = true;
-                rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
-            }
-            else return;
-        }
-    }
-
     void DestroyObstacle()
     {
         if (!GameManager.Instance.gameStart) return;
@@ -126,14 +120,6 @@ public class PlayerController : MonoBehaviour
                 Destroy(hitObj.gameObject);
                 GameManager.Instance.PlayerScored(1);
             }
-        }
-    }
-
-    void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.CompareTag("Ground"))
-        {
-            isJumping = false;
         }
     }
 }

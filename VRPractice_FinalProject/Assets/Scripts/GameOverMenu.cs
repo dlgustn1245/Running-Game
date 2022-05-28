@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class GameOverMenu : MonoBehaviour
@@ -15,7 +16,7 @@ public class GameOverMenu : MonoBehaviour
     }
 
     void GameOver(){
-        GameManager.Instance.gamePaused = true;
+        StartCoroutine(PauseGame());
         gameOverMenu.SetActive(true);
         scoreText.text = "score : " + GameManager.gameScore.ToString();
     }
@@ -32,5 +33,11 @@ public class GameOverMenu : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    IEnumerator PauseGame()
+    {
+        yield return new WaitForSeconds(2.0f);
+        GameManager.Instance.gamePaused = true;
     }
 }

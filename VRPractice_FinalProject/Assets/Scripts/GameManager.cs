@@ -38,12 +38,12 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         StartCoroutine(ShowReadyText());
-        SetPlayerScoreText();
     }
 
     void Update()
     {
         Time.timeScale = gamePaused ? 0.0f : 1.0f;
+        SetPlayerScoreText();
     }
 
     public void PlayerScored(int amount)
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
     {
         int cnt = 0;
         gameStart = false;
-        SoundManager.Instace.PlayGameSFX("countDown", 0.7f);
+        //SoundManager.Instace.PlayGameSFX("countDown", 0.7f);
         while (cnt < 3)
         {
             readyText.gameObject.SetActive(true);
@@ -79,6 +79,6 @@ public class GameManager : MonoBehaviour
         }
         gameStart = true;
         yield return new WaitForSeconds(0.35f);
-        SoundManager.Instace.PlayGameBGM(0.7f);
+        //SoundManager.Instace.PlayGameBGM(0.7f);
     }
 }
