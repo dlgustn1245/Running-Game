@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -110,16 +109,30 @@ public class PlayerController : MonoBehaviour
     void DestroyObstacle()
     {
         if (!GameManager.Instance.gameStart) return;
-
+        
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hitInfo, canDestroyDistance))
         {
-            Transform hitObj = hitInfo.collider.transform;
+            GameObject hitObj = hitInfo.collider.gameObject;
             if (hitObj.gameObject.CompareTag("Obstacle"))
             {
                 Destroy(hitObj.gameObject);
                 GameManager.Instance.PlayerScored(1);
             }
         }
+    }
+
+    public void SlowMoveSpeed()
+    {
+        StartCoroutine(SlowPlayer());
+    }
+
+    IEnumerator SlowPlayer()
+    {
+        moveSpeed -= 5;
+
+        yield return new WaitForSeconds(1.0f);
+
+        moveSpeed += 5;
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -49,7 +48,7 @@ public class SoundManager : MonoBehaviour
     {
         if (!audioClipDic.ContainsKey(name))
         {
-            print(name + " is not Contained audioClipDic");
+            print(name + " is not contained audioClipDic");
             return;
         }
         sfxPlayer.PlayOneShot(audioClipDic[name], volume);

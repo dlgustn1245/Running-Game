@@ -1,20 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CollectibleItemController : MonoBehaviour
 {
-    public enum CollectibleTypes { Item01, Item02, Obstacle };
+    public enum CollectibleTypes { Item01, Item02, Obstacle01, Obstacle02 };
     public CollectibleTypes types;
     public bool rotate;
 
     float rotateSpeed = 150.0f;
-
-    void Start()
-    {
-
-    }
-
 
     void Update()
     {
@@ -28,11 +20,11 @@ public class CollectibleItemController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Collect();
+            Collect(other.gameObject);
         }
     }
 
-    void Collect()
+    void Collect(GameObject other)
     {
         switch (types)
         {
@@ -43,12 +35,17 @@ public class CollectibleItemController : MonoBehaviour
                 }
             case CollectibleTypes.Item02:
                 {
-                    print("get improve");
+                    print("improve speed");
                     break;
                 }
-            case CollectibleTypes.Obstacle:
+            case CollectibleTypes.Obstacle01:
                 {
                     GameManager.Instance.PlayerDead();
+                    break;
+                }
+            case CollectibleTypes.Obstacle02:
+                {
+                    other.GetComponent<PlayerController>().SlowMoveSpeed();
                     break;
                 }
         }
