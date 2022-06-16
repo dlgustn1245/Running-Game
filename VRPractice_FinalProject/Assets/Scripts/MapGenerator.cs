@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public delegate void FunctionPointer();
 
@@ -20,6 +21,7 @@ public class Spawn
 public class MapGenerator : MonoBehaviour
 {
     public GameObject ground;
+    public GameObject currMap;
     public Transform straightPos;
     public Transform rightPos;
     public Transform leftPos;
@@ -50,17 +52,23 @@ public class MapGenerator : MonoBehaviour
 
     void SpawnStraight()
     {
-        Instantiate(ground, straightPos.position, straightPos.rotation);
+        OffMeshLink offMeshLink = currMap.GetComponentInChildren<OffMeshLink>();
+        currMap = Instantiate(ground, straightPos.position, straightPos.rotation) as GameObject;
+        offMeshLink.endTransform = currMap.transform.Find("OffSetLink").Find("Start").transform;
     }
 
     void SpawnRight()
     {
-        Instantiate(ground, rightPos.position, rightPos.rotation);
+        OffMeshLink offMeshLink = currMap.GetComponentInChildren<OffMeshLink>();
+        currMap = Instantiate(ground, rightPos.position, rightPos.rotation) as GameObject;
+        offMeshLink.endTransform = currMap.transform.Find("OffSetLink").Find("Right").transform;
     }
 
     void SpawnLeft()
     {
-        Instantiate(ground, leftPos.position, leftPos.rotation);
+        OffMeshLink offMeshLink = currMap.GetComponentInChildren<OffMeshLink>();
+        currMap = Instantiate(ground, leftPos.position, leftPos.rotation) as GameObject;
+        offMeshLink.endTransform = currMap.transform.Find("OffSetLink").Find("Left").transform;
     }
 
     void GenerateMap(int idx)

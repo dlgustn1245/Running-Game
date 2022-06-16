@@ -69,6 +69,6 @@ public class GameOverScene : MonoBehaviour
     }
 
     public void ToTitleButton(){
-        SceneManager.LoadScene("기말_2017136099_이현수");
+        SceneManager.LoadScene("TitleScene");
     }
 }

@@ -4,6 +4,6 @@ public class DestroyMap : MonoBehaviour
 {
     void Start()
     {
-        Destroy(this.gameObject, 15.0f);
+        Destroy(this.gameObject, 17.5f);
     }
 }

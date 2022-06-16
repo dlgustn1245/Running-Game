@@ -135,4 +135,18 @@ public class PlayerController : MonoBehaviour
 
         moveSpeed += 5;
     }
+
+    public void ImproveMoveSpeed()
+    {
+        StartCoroutine(SpeedUpPlayer());
+    }
+
+    IEnumerator SpeedUpPlayer()
+    {
+        moveSpeed += 5;
+
+        yield return new WaitForSeconds(2.5f);
+
+        moveSpeed -= 5;
+    }
 }

@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public bool playerDead = false;
     [System.NonSerialized]
     public bool gamePaused = false;
+    [System.NonSerialized]
+    public bool chaseStart = false;
 
     public Text readyText;
     public Text scoreText;
@@ -78,7 +80,14 @@ public class GameManager : MonoBehaviour
             ++cnt;
         }
         gameStart = true;
+        StartCoroutine(ChasePlayerStart());
         yield return new WaitForSeconds(0.35f);
         SoundManager.Instace.PlayGameBGM(0.7f);
+    }
+
+    IEnumerator ChasePlayerStart()
+    {
+        yield return new WaitForSeconds(2.5f);
+        chaseStart = true;
     }
 }

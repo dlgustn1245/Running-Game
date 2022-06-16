@@ -4,6 +4,8 @@ public class CollectibleItemController : MonoBehaviour
 {
     public enum CollectibleTypes { Item01, Item02, Obstacle01, Obstacle02 };
     public CollectibleTypes types;
+    public GameObject blueExplode;
+    public GameObject orangeExplode;
     public bool rotate;
 
     float rotateSpeed = 150.0f;
@@ -31,11 +33,15 @@ public class CollectibleItemController : MonoBehaviour
             case CollectibleTypes.Item01:
                 {
                     GameManager.Instance.PlayerScored(5);
+                    GameObject particle = Instantiate(blueExplode, this.gameObject.transform.position, Quaternion.identity) as GameObject;
+                    Destroy(particle, 2.0f);
                     break;
                 }
             case CollectibleTypes.Item02:
                 {
-                    print("improve speed");
+                    other.GetComponent<PlayerController>().ImproveMoveSpeed();
+                    GameObject particle = Instantiate(orangeExplode, this.gameObject.transform.position, Quaternion.identity) as GameObject;
+                    Destroy(particle, 2.0f);
                     break;
                 }
             case CollectibleTypes.Obstacle01:
